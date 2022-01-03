@@ -3,11 +3,8 @@
     "secret": "vdVHSk>M)@B:4Hq6",
     "emailFrom": "info@node-mongo-signup-verification-api.com",
     "smtpOptions": {
-        "host": "smtp.ethereal.email",
-        "port": 587,
-        "auth": {
-            "user": "marielle.gaylord97@ethereal.email",
-            "pass": "u3xrjn6z6TmUUhVQC9"
-        }
+        "host": "192.168.1.96",
+        "port": 1025
+        
     }
 }
