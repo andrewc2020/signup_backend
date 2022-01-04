@@ -18,7 +18,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const crypto_1 = __importDefault(require("crypto"));
 // const sendEmail = require('_helpers/send-email');
 // const db = require('_helpers/db');
-const Role = require('_helpers/role');
+const role_1 = __importDefault(require("../_helpers/role"));
 module.exports = {
     authenticate,
     refreshToken,
@@ -86,7 +86,7 @@ function register(params, origin) {
         const account = new db.Account(params);
         // first registered account is an admin
         const isFirstAccount = (yield db.Account.countDocuments({})) === 0;
-        account.role = isFirstAccount ? Role.Admin : Role.User;
+        account.role = isFirstAccount ? role_1.default.Admin : role_1.default.User;
         account.verificationToken = randomTokenString();
         // hash password
         account.passwordHash = hash(params.password);

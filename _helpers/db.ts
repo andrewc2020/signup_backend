@@ -1,4 +1,4 @@
-// const config =  require('../config.json');
+import config from '../config.json';
 import  mongoose from 'mongoose';
 const connectionOptions = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false };
 mongoose.connect(process.env.MONGODB_URI || config.connectionString, connectionOptions);

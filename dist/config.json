@@ -1,0 +1,9 @@
+{
+    "connectionString": "mongodb+srv://m001-student:m001-mongodb-basics@cluster0.hsdfm.mongodb.net/test?retryWrites=true&w=majority",
+    "secret": "vdVHSk>M)@B:4Hq6",
+    "emailFrom": "info@node-mongo-signup-verification-api.com",
+    "smtpOptions": {
+        "host": "192.168.1.96",
+        "port": 1025
+    }
+}

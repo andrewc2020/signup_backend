@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 // const sendEmail = require('_helpers/send-email');
 // const db = require('_helpers/db');
-const Role = require('_helpers/role');
+import Role from '../_helpers/role';
 
 module.exports = {
     authenticate,

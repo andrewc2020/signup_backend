@@ -1,4 +1,4 @@
-
+import express from 'express'
 const router = express.Router();
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');

@@ -1,6 +1,7 @@
-module.exports = {
-    Admin: 'Admin',
-    User: 'User',
-    Student:'Student',
-    Teacher: 'Teacher'
+enum Role  {
+    Admin,
+    User
 }
+
+
+export default Role;
