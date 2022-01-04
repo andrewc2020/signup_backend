@@ -1,6 +1,7 @@
 ﻿require('rootpath')();
 import errorHandler from './_middleware/error-handler'
-const express = require('express');
+import express from 'express';
+
 const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');

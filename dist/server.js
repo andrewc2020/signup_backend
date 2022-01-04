@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require('rootpath')();
 const error_handler_1 = __importDefault(require("./_middleware/error-handler"));
-const express = require('express');
-const app = express();
+const express_1 = __importDefault(require("express"));
+const app = (0, express_1.default)();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
