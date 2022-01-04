@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,13 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer = require('nodemailer');
-const config = require('config.json');
-module.exports = sendEmail;
-function sendEmail({ to, subject, html, from = config.emailFrom }) {
+const config_json_1 = __importDefault(require("../config.json"));
+function sendEmail({ to, subject, html, from = config_json_1.default.emailFrom }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const transporter = nodemailer.createTransport(config.smtpOptions);
+        const transporter = nodemailer.createTransport(config_json_1.default.smtpOptions);
         yield transporter.sendMail({ from, to, subject, html });
     });
 }
+exports.default = sendEmail;
 //# sourceMappingURL=send-email.js.map

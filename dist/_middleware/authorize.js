@@ -1,3 +1,4 @@
+"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -7,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
 const jwt = require('express-jwt');
-const { secret } = require('config.json');
-const db = require('../_helpers/db');
+const config_json_1 = require("../config.json");
+const db_1 = __importDefault(require("../_helpers/db"));
 module.exports = authorize;
 function authorize(roles = []) {
     // roles param can be a single role string (e.g. Role.User or 'User') 
@@ -19,11 +24,11 @@ function authorize(roles = []) {
     }
     return [
         // authenticate JWT token and attach user to request object (req.user)
-        jwt({ secret, algorithms: ['HS256'] }),
+        jwt({ secret: config_json_1.secret, algorithms: ['HS256'] }),
         // authorize based on user role
         (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-            const account = yield db.Account.findById(req.user.id);
-            const refreshTokens = yield db.RefreshToken.find({ account: account.id });
+            const account = yield db_1.default.Account.findById(req.user.id);
+            const refreshTokens = yield db_1.default.RefreshToken.find({ account: account.id });
             if (!account || (roles.length && !roles.includes(account.role))) {
                 // account no longer exists or role not authorized
                 return res.status(401).json({ message: 'Unauthorized' });

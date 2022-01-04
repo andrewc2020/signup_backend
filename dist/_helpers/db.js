@@ -7,8 +7,9 @@ const config_json_1 = __importDefault(require("../config.json"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const connectionOptions = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false };
 mongoose_1.default.connect(process.env.MONGODB_URI || config_json_1.default.connectionString, connectionOptions);
+console.log(config_json_1.default.connectionString);
 mongoose_1.default.Promise = global.Promise;
-module.exports = {
+exports.default = {
     Account: require('../accounts/account.model'),
     RefreshToken: require('../accounts/refresh-token.model'),
     isValidId

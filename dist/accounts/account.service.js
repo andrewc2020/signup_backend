@@ -12,12 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// const config = require('config.json');
-// const jwt = require('jsonwebtoken');
+const config_json_1 = __importDefault(require("../config.json"));
+const jwt = require('jsonwebtoken');
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const crypto_1 = __importDefault(require("crypto"));
-// const sendEmail = require('_helpers/send-email');
+const send_email_1 = __importDefault(require("../_helpers/send-email"));
 // const db = require('_helpers/db');
+const db_1 = __importDefault(require("../_helpers/db"));
 const role_1 = __importDefault(require("../_helpers/role"));
 module.exports = {
     authenticate,
@@ -36,7 +37,7 @@ module.exports = {
 };
 function authenticate({ email, password, ipAddress }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const account = yield db.Account.findOne({ email });
+        const account = yield db_1.default.Account.findOne({ email });
         if (!account || !account.isVerified || !bcryptjs_1.default.compareSync(password, account.passwordHash)) {
             throw 'Email or password is incorrect';
         }
@@ -78,14 +79,14 @@ function revokeToken({ token, ipAddress }) {
 function register(params, origin) {
     return __awaiter(this, void 0, void 0, function* () {
         // validate
-        if (yield db.Account.findOne({ email: params.email })) {
+        if (yield db_1.default.Account.findOne({ email: params.email })) {
             // send already registered error in email to prevent account enumeration
             return yield sendAlreadyRegisteredEmail(params.email, origin);
         }
         // create account object
-        const account = new db.Account(params);
+        const account = new db_1.default.Account(params);
         // first registered account is an admin
-        const isFirstAccount = (yield db.Account.countDocuments({})) === 0;
+        const isFirstAccount = (yield db_1.default.Account.countDocuments({})) === 0;
         account.role = isFirstAccount ? role_1.default.Admin : role_1.default.User;
         account.verificationToken = randomTokenString();
         // hash password
@@ -98,7 +99,7 @@ function register(params, origin) {
 }
 function verifyEmail({ token }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const account = yield db.Account.findOne({ verificationToken: token });
+        const account = yield db_1.default.Account.findOne({ verificationToken: token });
         if (!account)
             throw 'Verification failed';
         account.verified = Date.now();
@@ -108,7 +109,7 @@ function verifyEmail({ token }) {
 }
 function forgotPassword({ email }, origin) {
     return __awaiter(this, void 0, void 0, function* () {
-        const account = yield db.Account.findOne({ email });
+        const account = yield db_1.default.Account.findOne({ email });
         // always return ok response to prevent email enumeration
         if (!account)
             return;
@@ -124,7 +125,7 @@ function forgotPassword({ email }, origin) {
 }
 function validateResetToken({ token }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const account = yield db.Account.findOne({
+        const account = yield db_1.default.Account.findOne({
             'resetToken.token': token,
             'resetToken.expires': { $gt: Date.now() }
         });
@@ -134,7 +135,7 @@ function validateResetToken({ token }) {
 }
 function resetPassword({ token, password }) {
     return __awaiter(this, void 0, void 0, function* () {
-        const account = yield db.Account.findOne({
+        const account = yield db_1.default.Account.findOne({
             'resetToken.token': token,
             'resetToken.expires': { $gt: Date.now() }
         });
@@ -149,7 +150,7 @@ function resetPassword({ token, password }) {
 }
 function getAll() {
     return __awaiter(this, void 0, void 0, function* () {
-        const accounts = yield db.Account.find();
+        const accounts = yield db_1.default.Account.find();
         return accounts.map(x => basicDetails(x));
     });
 }
@@ -162,10 +163,10 @@ function getById(id) {
 function create(params) {
     return __awaiter(this, void 0, void 0, function* () {
         // validate
-        if (yield db.Account.findOne({ email: params.email })) {
+        if (yield db_1.default.Account.findOne({ email: params.email })) {
             throw 'Email "' + params.email + '" is already registered';
         }
-        const account = new db.Account(params);
+        const account = new db_1.default.Account(params);
         account.verified = Date.now();
         // hash password
         account.passwordHash = hash(params.password);
@@ -178,7 +179,7 @@ function update(id, params) {
     return __awaiter(this, void 0, void 0, function* () {
         const account = yield getAccount(id);
         // validate (if email was changed)
-        if (params.email && account.email !== params.email && (yield db.Account.findOne({ email: params.email }))) {
+        if (params.email && account.email !== params.email && (yield db_1.default.Account.findOne({ email: params.email }))) {
             throw 'Email "' + params.email + '" is already taken';
         }
         // hash password if it was entered
@@ -201,9 +202,9 @@ function _delete(id) {
 // helper functions
 function getAccount(id) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!db.isValidId(id))
+        if (!db_1.default.isValidId(id))
             throw 'Account not found';
-        const account = yield db.Account.findById(id);
+        const account = yield db_1.default.Account.findById(id);
         if (!account)
             throw 'Account not found';
         return account;
@@ -211,7 +212,7 @@ function getAccount(id) {
 }
 function getRefreshToken(token) {
     return __awaiter(this, void 0, void 0, function* () {
-        const refreshToken = yield db.RefreshToken.findOne({ token }).populate('account');
+        const refreshToken = yield db_1.default.RefreshToken.findOne({ token }).populate('account');
         if (!refreshToken || !refreshToken.isActive)
             throw 'Invalid token';
         return refreshToken;
@@ -222,11 +223,11 @@ function hash(password) {
 }
 function generateJwtToken(account) {
     // create a jwt token containing the account id that expires in 15 minutes
-    return jwt.sign({ sub: account.id, id: account.id }, config.secret, { expiresIn: '15m' });
+    return jwt.sign({ sub: account.id, id: account.id }, config_json_1.default.secret, { expiresIn: '15m' });
 }
 function generateRefreshToken(account, ipAddress) {
     // create a refresh token that expires in 7 days
-    return new db.RefreshToken({
+    return new db_1.default.RefreshToken({
         account: account.id,
         token: randomTokenString(),
         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
@@ -252,7 +253,7 @@ function sendVerificationEmail(account, origin) {
             message = `<p>Please use the below token to verify your email address with the <code>/account/verify-email</code> api route:</p>
                    <p><code>${account.verificationToken}</code></p>`;
         }
-        yield sendEmail({
+        yield (0, send_email_1.default)({
             to: account.email,
             subject: 'Sign-up Verification API - Verify Email',
             html: `<h4>Verify Email</h4>
@@ -270,7 +271,7 @@ function sendAlreadyRegisteredEmail(email, origin) {
         else {
             message = `<p>If you don't know your password you can reset it via the <code>/account/forgot-password</code> api route.</p>`;
         }
-        yield sendEmail({
+        yield (0, send_email_1.default)({
             to: email,
             subject: 'Sign-up Verification API - Email Already Registered',
             html: `<h4>Email Already Registered</h4>
@@ -291,7 +292,7 @@ function sendPasswordResetEmail(account, origin) {
             message = `<p>Please use the below token to reset your password with the <code>/account/reset-password</code> api route:</p>
                    <p><code>${account.resetToken.token}</code></p>`;
         }
-        yield sendEmail({
+        yield (0, send_email_1.default)({
             to: account.email,
             subject: 'Sign-up Verification API - Reset Password',
             html: `<h4>Reset Password Email</h4>

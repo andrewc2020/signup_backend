@@ -1,9 +1,10 @@
-﻿// const config = require('config.json');
-// const jwt = require('jsonwebtoken');
+﻿import  config  from '../config.json';
+const jwt = require('jsonwebtoken');
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-// const sendEmail = require('_helpers/send-email');
+import sendEmail from '../_helpers/send-email';
 // const db = require('_helpers/db');
+import db from '../_helpers/db'
 import Role from '../_helpers/role';
 
 module.exports = {
