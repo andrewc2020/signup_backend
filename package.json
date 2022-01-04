@@ -8,8 +8,8 @@
         "url": "https://github.com/cornflourblue/node-mongo-signup-verification-api.git"
     },
     "scripts": {
-        "start": "node ./server.js",
-        "start:dev": "nodemon ./server.js",
+        "start": "node ./dist/server.js",
+        "start:dev": "nodemon ./dist/server.js",
         "test": "jest",
         "clean": "rm -rf dist",
         "transpile": "npx tsc"
