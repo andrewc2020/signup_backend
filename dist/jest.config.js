@@ -1,5 +1,8 @@
 module.exports = {
-    testEnvironment: "jsdom",
+    // testEnvironment: "jsdom",
+    moduleFileExtensions: ['js', 'ts', 'tsx'],
+    preset: "ts-jest",
+    testEnvironment: "node",
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
     testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/tests/e2e'],
     moduleNameMapper: {
