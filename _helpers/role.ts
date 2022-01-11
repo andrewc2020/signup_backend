@@ -1,6 +1,8 @@
 enum Role  {
     Admin,
-    User
+    User,
+    Student,
+    Teacher
 }
 
 

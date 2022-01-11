@@ -1,16 +1,14 @@
-
-var role = require('./role')
-
+import Role from './role'
 
 
 test('contains student', () =>{
  
-    expect(role.Student).toBe("Student")
+    expect(Role.Student).toBe(2)
     
 })
 
 test('contains teacher', () =>{
  
-    expect(role.Teacher).toBe("Teacher")
+    expect(Role.Teacher).toBe(3)
     
 })
