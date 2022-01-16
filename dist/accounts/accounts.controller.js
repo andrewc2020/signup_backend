@@ -30,7 +30,7 @@ router.post('/verify-email', verifyEmailSchema, verifyEmail);
 router.post('/forgot-password', forgotPasswordSchema, forgotPassword);
 router.post('/validate-reset-token', validateResetTokenSchema, validateResetToken);
 router.post('/reset-password', resetPasswordSchema, resetPassword);
-router.get('/', authorize(role_1.default.User), getAll);
+router.get('/', authorize(role_1.default.Admin), getAll);
 router.get('/:id', authorize(), getById);
 router.post('/', authorize(role_1.default.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);

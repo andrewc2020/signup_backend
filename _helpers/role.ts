@@ -1,8 +1,8 @@
 enum Role  {
-    Admin,
-    User,
-    Student,
-    Teacher
+    Admin = "Admin",
+    User = "User",
+    Student = "Student",
+    Teacher = "Teacher"
 }
 
 
