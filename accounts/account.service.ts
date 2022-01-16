@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken');
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import sendEmail from '../_helpers/send-email';
-// const db = require('_helpers/db');
 import db from '../_helpers/db'
 import Role from '../_helpers/role';
 

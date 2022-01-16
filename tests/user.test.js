@@ -52,14 +52,16 @@ describe('example tests',() =>{
  
    describe("create", function() {
     it("should add a new user to the db", async function() {
-      const stubValue =  new Account({ email:"marygaylord@somewhere.com", title: "Ms", firstName: "Mary", lastName: "Gaylord", acceptTerms: true, role: Role.Admin});
+      const stubValue =  new Account({ email:"marygaylord@somewhere.com", title: "Ms", firstName: "Mary", lastName: "Gaylord", acceptTerms: true, role: Role.Admin, passwordHash: "qiprqr9339"});
       const stub = sinon.stub(AccountService, "register").returns(stubValue);
       
-      const user = await AccountService.register(stubValue.name, stubValue.email);
+      const user = await AccountService.register(stubValue.email, stubValue.passwordHash);
       expect(stub.calledOnce).to.be.true;
       expect(user.id).to.equal(stubValue.id);
-      expect(user.name).to.equal(stubValue.name);
+      expect(user.firstName).to.equal(stubValue.firstName);
+      expect(user.lastName).to.equal(stubValue.lastName);
       expect(user.email).to.equal(stubValue.email);
+      expect(user.role).to.equal(stubValue.role)
       expect(user.createdAt).to.equal(stubValue.createdAt);
       expect(user.updatedAt).to.equal(stubValue.updatedAt);
       AccountService.register.restore()
