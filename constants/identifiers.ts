@@ -1,5 +1,6 @@
+
 const SERVICE_IDENTIFIER = {
-    IAccountRepository: Symbol("AccountRepository"),
+    IAccountRepository: Symbol("AccountRepository")
 };
 
 export default SERVICE_IDENTIFIER;

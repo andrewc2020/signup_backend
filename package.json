@@ -13,7 +13,7 @@
         "buildDev": "rm -rf dist && webpack --mode development",
         "test": "jest",
         "clean": "rm -rf dist",
-        "transpile": "npx tsc --resolveJsonModule",
+        "transpile": "npx tsc",
         "test:mocha": "ts-mocha --require @babel/register ./tests/*.* --exit"
     },
     "dependencies": {
