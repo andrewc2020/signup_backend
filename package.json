@@ -13,13 +13,14 @@
         "buildDev": "rm -rf dist && webpack --mode development",
         "test": "jest",
         "clean": "rm -rf dist",
-        "transpile": "npx tsc",
+        "transpile": "npx tsc --resolveJsonModule",
         "test:mocha": "ts-mocha --require @babel/register ./tests/*.* --exit"
     },
     "dependencies": {
         "@babel/register": "^7.16.9",
         "@types/chai": "^4.3.0",
         "@types/expect": "^24.3.0",
+        "@types/jsonwebtoken": "^8.5.7",
         "@types/mocha": "^9.0.0",
         "@types/node": "^17.0.8",
         "@types/react": "^17.0.38",
@@ -43,6 +44,7 @@
         "mongodb": "^3.5.7",
         "mongoose": "^5.9.25",
         "nodemailer": "^6.4.6",
+        "reflect-metadata": "^0.1.13",
         "rootpath": "^0.1.2",
         "sinon": "^12.0.1",
         "sinon-chai": "^3.7.0",

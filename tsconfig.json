@@ -6,7 +6,12 @@
       "moduleResolution": "node",
       "sourceMap": true,
       "outDir": "dist",
-      "resolveJsonModule": true
+      "types": [
+        "reflect-metadata"
+      ],
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true
+     
     },
     "lib": ["es2015"]
   }

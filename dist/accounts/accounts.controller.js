@@ -20,7 +20,9 @@ const router = express_1.default.Router();
 const Joi = require('joi');
 const validateRequest = require('../_middleware/validate-request');
 const authorize = require('../_middleware/authorize');
-const accountService = require('./account.service');
+const installer_1 = __importDefault(require("../_helpers/installer"));
+const identifiers_1 = __importDefault(require("../constants/identifiers"));
+const account_service_1 = require("../accounts/account.service");
 // routes
 router.post('/authenticate', authenticateSchema, authenticate);
 router.post('/refresh-token', refreshToken);
@@ -36,6 +38,9 @@ router.post('/', authorize(role_1.default.Admin), createSchema, create);
 router.put('/:id', authorize(), updateSchema, update);
 router.delete('/:id', authorize(), _delete);
 module.exports = router;
+// Composition root
+let accountRepo = installer_1.default.get(identifiers_1.default.IAccountRepository);
+let service = new account_service_1.AccountService(accountRepo);
 function authenticateSchema(req, res, next) {
     const schema = Joi.object({
         email: Joi.string().required(),
@@ -46,7 +51,7 @@ function authenticateSchema(req, res, next) {
 function authenticate(req, res, next) {
     const { email, password } = req.body;
     const ipAddress = req.ip;
-    accountService.authenticate({ email, password, ipAddress })
+    service.authenticate({ email, password, ipAddress })
         .then((_a) => {
         var { refreshToken } = _a, account = __rest(_a, ["refreshToken"]);
         setTokenCookie(res, refreshToken);
@@ -57,7 +62,7 @@ function authenticate(req, res, next) {
 function refreshToken(req, res, next) {
     const token = req.cookies.refreshToken;
     const ipAddress = req.ip;
-    accountService.refreshToken({ token, ipAddress })
+    service.refreshToken({ token, ipAddress })
         .then((_a) => {
         var { refreshToken } = _a, account = __rest(_a, ["refreshToken"]);
         setTokenCookie(res, refreshToken);
@@ -81,7 +86,7 @@ function revokeToken(req, res, next) {
     if (!req.user.ownsToken(token) && req.user.role !== role_1.default.Admin) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
-    accountService.revokeToken({ token, ipAddress })
+    service.revokeToken({ token, ipAddress })
         .then(() => res.json({ message: 'Token revoked' }))
         .catch(next);
 }
@@ -98,7 +103,7 @@ function registerSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 function register(req, res, next) {
-    accountService.register(req.body, req.get('origin'))
+    service.register(req.body, req.get('origin'))
         .then(() => res.json({ message: 'Registration successful, please check your email for verification instructions' }))
         .catch(next);
 }
@@ -109,7 +114,7 @@ function verifyEmailSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 function verifyEmail(req, res, next) {
-    accountService.verifyEmail(req.body)
+    service.verifyEmail(req.body)
         .then(() => res.json({ message: 'Verification successful, you can now login' }))
         .catch(next);
 }
@@ -120,7 +125,7 @@ function forgotPasswordSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 function forgotPassword(req, res, next) {
-    accountService.forgotPassword(req.body, req.get('origin'))
+    service.forgotPassword(req.body, req.get('origin'))
         .then(() => res.json({ message: 'Please check your email for password reset instructions' }))
         .catch(next);
 }
@@ -131,7 +136,7 @@ function validateResetTokenSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 function validateResetToken(req, res, next) {
-    accountService.validateResetToken(req.body)
+    service.validateResetToken(req.body)
         .then(() => res.json({ message: 'Token is valid' }))
         .catch(next);
 }
@@ -144,12 +149,12 @@ function resetPasswordSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 function resetPassword(req, res, next) {
-    accountService.resetPassword(req.body)
+    service.resetPassword(req.body)
         .then(() => res.json({ message: 'Password reset successful, you can now login' }))
         .catch(next);
 }
 function getAll(req, res, next) {
-    accountService.getAll()
+    service.getAll()
         .then(accounts => res.json(accounts))
         .catch(next);
 }
@@ -158,7 +163,7 @@ function getById(req, res, next) {
     if (req.params.id !== req.user.id && req.user.role !== role_1.default.Admin) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
-    accountService.getById(req.params.id)
+    service.getById(req.params.id, req.params)
         .then(account => account ? res.json(account) : res.sendStatus(404))
         .catch(next);
 }
@@ -175,7 +180,7 @@ function createSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 function create(req, res, next) {
-    accountService.create(req.body)
+    service.create(req.body)
         .then(account => res.json(account))
         .catch(next);
 }
@@ -201,7 +206,7 @@ function update(req, res, next) {
     if (req.params.id !== req.user.id && req.user.role !== role_1.default.Admin) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
-    accountService.update(req.params.id, req.body)
+    service.update(req.params.id, req.body)
         .then(account => res.json(account))
         .catch(next);
 }
@@ -210,7 +215,7 @@ function _delete(req, res, next) {
     if (req.params.id !== req.user.id && req.user.role !== role_1.default.Admin) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
-    accountService.delete(req.params.id)
+    service.delete(req.params.id)
         .then(() => res.json({ message: 'Account deleted successfully' }))
         .catch(next);
 }
