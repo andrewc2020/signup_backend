@@ -86,6 +86,7 @@ export class AccountRepository implements IAccountRepository {
     }
 
     async authenticate({email,password,ipAddress}: any){
+       
         const account = await db.Account.findOne({ email });
 
         if (!account || !account.isVerified || !bcrypt.compareSync(password, account.passwordHash)) {
