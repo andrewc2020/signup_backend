@@ -14,6 +14,7 @@ export interface IAccountRepository{
     forgotPassword({ email }, origin) 
     validateResetToken({ token }: { token: any; })
     resetPassword({ token, password }) 
+    start()
 
 
 

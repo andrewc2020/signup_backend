@@ -4,10 +4,11 @@ import { IAccountService } from './IAccountService';
 
 export class AccountService implements IAccountService{
     
-    private repository : IAccountRepository;
+     private repository : IAccountRepository;
     
-        constructor(repository:IAccountRepository){
+        constructor( repository:IAccountRepository){
             this.repository= repository;
+            this.repository.start()
         }
    
     async register(params: any, origin: any) {

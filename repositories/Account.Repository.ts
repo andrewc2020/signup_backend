@@ -14,9 +14,12 @@ import { injectable } from 'inversify';
 
 
 export class AccountRepository implements IAccountRepository {
+    start() {
+        db.run().then(() => console.log('db connected'),() => console.log('connection failed'))
+    }
     
     public constructior() {
-        db.run().then(() => console.log('db connected'),() => console.log('connection failed'))
+        
     }
     async getAll() {
         const accounts = await db.Account.find();

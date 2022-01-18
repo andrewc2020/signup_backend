@@ -10,6 +10,9 @@ export class FakeAccountRepository implements IAccountRepository {
     constructor(){
 
     }
+    start() {
+        throw new Error('Method not implemented.');
+    }
     getAll() {
         throw new Error("Method not implemented.");
     }
