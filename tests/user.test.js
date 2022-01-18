@@ -7,7 +7,7 @@ import {IAccountRepository} from "../repositories/IAccountRepository";
 import { AccountRepository } from '../repositories/Account.Repository';
 import container from "../_helpers/installer";
 import SERVICE_IDENTIFIER from "../constants/identifiers";
-import { AccountService } from '../accounts/account.service old';
+import AccountService  from '../accounts/account.service old';
 import ValidateRequest from '../_middleware/validate-request'
 import factories from './factories'
 import Role from '../_helpers/role'
