@@ -15,12 +15,14 @@ class AccountService {
         this.repository = repository;
     }
     register(params, origin) {
-        try {
-            return this.repository.register(params, origin);
-        }
-        catch (err) {
-            throw new Error('Method not implemented.');
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                return yield this.repository.register(params, origin);
+            }
+            catch (err) {
+                throw new Error('Method not implemented.');
+            }
+        });
     }
     verifyEmail({ token }) {
         return this.repository.verifyEmail({ token });

@@ -1,7 +1,28 @@
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+//const mongoose = require('mongoose');
+import { Schema, model, connect } from 'mongoose';
 
-const schema = new Schema({
+// Document interface
+interface Account {
+   
+    email: string;
+    passwordHash: string;
+    title: string,
+    firstName : string,
+    lastName : string,
+    acceptTerms: boolean,
+    role: string,
+    verificationToken: string,
+    verified: Date,
+    resetToken: {
+        token: String,
+        expires: Date
+    },
+    passwordReset: Date,
+    created: Date ,
+    updated: Date
+  }
+
+const schema = new Schema<Account>({
     email: { type: String, unique: true, required: true },
     passwordHash: { type: String, required: true },
     title: { type: String, required: true },
@@ -33,5 +54,6 @@ schema.set('toJSON', {
         delete ret.passwordHash;
     }
 });
+const AccountModel = model<Account>('Account', schema);
 
-module.exports = mongoose.model('Account', schema);
+export default AccountModel

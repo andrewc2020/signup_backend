@@ -10,9 +10,9 @@ export class AccountService implements IAccountService{
             this.repository= repository;
         }
    
-    register(params: any, origin: any) {
+    async register(params: any, origin: any) {
         try{
-        return this.repository.register(params, origin);
+        return await this.repository.register(params, origin);
         }
         catch(err){
             throw new Error('Method not implemented.');

@@ -1,8 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-//const mongoose = require('mongoose');
-const mongoose_1 = require("mongoose");
-const schema = new mongoose_1.Schema({
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const schema = new Schema({
     email: { type: String, unique: true, required: true },
     passwordHash: { type: String, required: true },
     title: { type: String, required: true },
@@ -20,9 +19,11 @@ const schema = new mongoose_1.Schema({
     created: { type: Date, default: Date.now },
     updated: Date
 });
+
 schema.virtual('isVerified').get(function () {
     return !!(this.verified || this.passwordReset);
 });
+
 schema.set('toJSON', {
     virtuals: true,
     versionKey: false,
@@ -32,6 +33,5 @@ schema.set('toJSON', {
         delete ret.passwordHash;
     }
 });
-const AccountModel = (0, mongoose_1.model)('Account', schema);
-exports.default = AccountModel;
-//# sourceMappingURL=account.model.js.map
+
+module.exports = mongoose.model('Account', schema);

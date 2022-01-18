@@ -1,5 +1,6 @@
 export const TYPES = {
-    AccountRepository: Symbol("AccountRepository"),
-    AccountService: Symbol("AccountService"),
+    AccountRepository: Symbol.for("AccountRepository"),
+    FakeAccountRepository: Symbol.for("FakeAccountRepository"),
+    AccountService: Symbol.for("AccountService"),
 
   };
