@@ -1,4 +1,4 @@
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
 import IAccount from "../accounts/IAccount";
 import { IAccountRepository } from "./IAccountRepository";
 

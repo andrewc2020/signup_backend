@@ -7,7 +7,7 @@ import  config  from '../config.json';
 import sendEmail from '../_helpers/send-email';
 import Role from '../_helpers/role';
 
-import { injectable } from "inversify";
+import { injectable } from 'inversify';
 
 
 @injectable()
@@ -16,7 +16,7 @@ import { injectable } from "inversify";
 export class AccountRepository implements IAccountRepository {
     
     constructior() {
-
+        db.run().then(() => console.log('db connected'),() => console.log('connection failed'))
     }
     async getAll() {
         const accounts = await db.Account.find();
@@ -35,7 +35,7 @@ export class AccountRepository implements IAccountRepository {
             throw 'Email "' + params.email + '" is already registered';
         }
         const account = new db.Account(params);
-        account.verified = Date.now();
+        account.verified = new Date(Date.now());
 
         // hash password
         account.passwordHash = this.hash(params.password);
@@ -61,7 +61,7 @@ export class AccountRepository implements IAccountRepository {
 
         // copy params to account and save
         Object.assign(account, params);
-        account.updated = Date.now();
+        account.updated = new Date(Date.now());
         await account.save();
 
         return this.basicDetails(account);
@@ -114,7 +114,7 @@ export class AccountRepository implements IAccountRepository {
     
         // replace old refresh token with a new one and save
         const newRefreshToken = this.generateRefreshToken(account, ipAddress);
-        refreshToken.revoked = Date.now();
+        refreshToken.revoked = new Date(Date.now());
         refreshToken.revokedByIp = ipAddress;
         refreshToken.replacedByToken = newRefreshToken.token;
         await refreshToken.save();
@@ -135,7 +135,7 @@ export class AccountRepository implements IAccountRepository {
         const refreshToken = await this.getRefreshToken(token);
 
         // revoke token and save
-        refreshToken.revoked = Date.now();
+        refreshToken.revoked = new Date(Date.now());
         refreshToken.revokedByIp = ipAddress;
         await refreshToken.save();
         
@@ -190,7 +190,7 @@ export class AccountRepository implements IAccountRepository {
     
         if (!account) throw 'Verification failed';
     
-        account.verified = Date.now();
+        account.verified = new Date(Date.now());
         account.verificationToken = undefined;
         await account.save();
     }
@@ -231,7 +231,7 @@ export class AccountRepository implements IAccountRepository {
     
         // update password and remove reset token
         account.passwordHash = this.hash(password);
-        account.passwordReset = Date.now();
+        account.passwordReset = new Date(Date.now());
         account.resetToken = undefined;
         await account.save();
     }

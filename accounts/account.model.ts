@@ -1,8 +1,9 @@
 //const mongoose = require('mongoose');
-import { Schema, model, connect } from 'mongoose';
+import { Func } from 'mocha';
+import { Schema, model, connect, Document } from 'mongoose';
 
 // Document interface
-interface Account {
+interface Account extends Document {
    
     email: string;
     passwordHash: string;
@@ -17,6 +18,7 @@ interface Account {
         token: String,
         expires: Date
     },
+    isVerified: boolean,
     passwordReset: Date,
     created: Date ,
     updated: Date
@@ -36,14 +38,19 @@ const schema = new Schema<Account>({
         token: String,
         expires: Date
     },
+   
     passwordReset: Date,
     created: { type: Date, default: Date.now },
     updated: Date
 });
 
-schema.virtual('isVerified').get(function () {
-    return !!(this.verified || this.passwordReset);
-});
+schema.virtual("isVerified").get(function( this : Account) : boolean {
+    return !!(this.verified || this.passwordReset); ;
+  }) ;
+
+// schema.virtual('isVerified').get(function () {
+//     return !!(this.verified || this.passwordReset);
+// });
 
 schema.set('toJSON', {
     virtuals: true,

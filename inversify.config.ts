@@ -1,7 +1,7 @@
 
 import "reflect-metadata";
 import "reflect-metadata";
-import { Container } from "inversify";
+import { Container } from 'inversify';
 
 import SERVICE_IDENTIFIER from "./constants/identifiers";
 import {IAccountRepository} from "./repositories/IAccountRepository";

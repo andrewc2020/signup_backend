@@ -1,7 +1,20 @@
-import mongoose from 'mongoose';
-const Schema = mongoose.Schema;
+import { Schema, model, connect, Document } from 'mongoose';
 
-const schema = new Schema({
+interface RefreshToken extends Document{
+    account: Schema.Types.ObjectId,
+    token: string,
+    expires: Date,
+    created: Date,
+    createdByIp: string,
+    revoked: Date,
+    revokedByIp: string,
+    replacedByToken: string,
+    isExpired: boolean,
+    isActive: boolean
+
+}
+
+const schema = new Schema<RefreshToken>({
     account: { type: Schema.Types.ObjectId, ref: 'Account' },
     token: String,
     expires: Date,
@@ -12,12 +25,14 @@ const schema = new Schema({
     replacedByToken: String
 });
 
-schema.virtual('isExpired').get(function () {
-    return Date.now() >= this.expires;
+schema.virtual('isExpired').get(function (this: RefreshToken) : boolean {
+    return new Date() >= this.expires;
 });
 
-schema.virtual('isActive').get(function () {
+schema.virtual('isActive').get(function (this : RefreshToken): boolean {
     return !this.revoked && !this.isExpired;
 });
 
-module.exports = mongoose.model('RefreshToken', schema);
+
+const RefreshTokenModel = model<RefreshToken>('RefreshToken', schema);
+export default RefreshTokenModel

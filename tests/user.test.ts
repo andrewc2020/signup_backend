@@ -36,7 +36,7 @@ describe('example tests',() =>{
        
       
        
-        m.save((function(err) {
+        m.save((function(err : any) {
             expect(err.errors.email).to.exist;
             console.log(err.errors.email);
             done();
@@ -48,7 +48,7 @@ describe('example tests',() =>{
     var m = new Account({ email:"marygaylord@somewhere.com", title: "Ms", firstName: "Mary", lastName: "Gaylord", acceptTerms: true, role: Role.Admin});
     expect(m.role).to.equal('Admin')
 
-    m.save((function(err) {
+    m.save((function(err : any) {
         expect(err.errors.role).not.to.exist;
        
         done();
@@ -58,10 +58,12 @@ describe('example tests',() =>{
  
    describe("create", function() {
     it("should add a new user to the db", async function() {
-      const stubValue =  new Account({ email:"marygaylord@somewhere.com", title: "Ms", firstName: "Mary", lastName: "Gaylord", acceptTerms: true, role: Role.Admin, passwordHash: "qiprqr9339"});
+      const stubValue  =  new Account({ email:"marygaylord@somewhere.com", title: "Ms", firstName: "Mary", lastName: "Gaylord", acceptTerms: true, role: Role.Admin, passwordHash: "qiprqr9339"});
       let accountRepo = container.get<IAccountRepository>(SERVICE_IDENTIFIER.IAccountRepository);
-      let service= new AccountService(accountRepo);
-      const stub = await sinon.stub(service, "register").returns(stubValue);
+      let service = new AccountService(accountRepo);
+      let methodStub: sinon.SinonStubbedMember<typeof service.register>;
+      methodStub = sinon.stub(service, 'register');
+      const stub = methodStub.resolves(stubValue)
       
       const user = await service.register(stubValue.email, stubValue.passwordHash);
       expect(stub.calledOnce).to.be.true;

@@ -1,22 +1,18 @@
+import {connect, Types} from 'mongoose'
 import config from '../config.json';
-import  mongoose from 'mongoose';
-const connectionOptions = { useCreateIndex: true, useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false };
-//mongoose.connect(process.env.MONGODB_URI || config.connectionString);
+import Account from '../accounts/account.model'
+import RefreshToken from '../accounts/refresh-token.model'
 
-mongoose.connect(config.connectionString, {
-    serverSelectionTimeoutMS: 5000
-  }).catch(err => console.log(err.reason));
+async function run(): Promise<void> {
+    // 4. Connect to MongoDB
+    await connect(config.connectionString);
 
-mongoose.Promise = global.Promise;
-
-export default {
-    Account: require('../accounts/account.model'),
-    RefreshToken: require('../accounts/refresh-token.model'),
-    isValidId
+    console.log('connected to database')
+  
     
-};
-
-function isValidId(id) {
-    return mongoose.Types.ObjectId.isValid(id);
+  }
+  function isValidId(id) {
+    return Types.ObjectId.isValid(id);
 }
 
+  export default {Account, run, isValidId, RefreshToken}
