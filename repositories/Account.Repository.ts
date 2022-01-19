@@ -3,7 +3,7 @@ import db from '../_helpers/db'
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import  config  from '../config.json';
+
 import sendEmail from '../_helpers/send-email';
 import Role from '../_helpers/role';
 
@@ -285,7 +285,7 @@ export class AccountRepository implements IAccountRepository {
 
     private generateJwtToken(account) {
         // create a jwt token containing the account id that expires in 15 minutes
-        return jwt.sign({ sub: account.id, id: account.id }, config.secret, { expiresIn: '15m' });
+        return jwt.sign({ sub: account.id, id: account.id }, process.env.SECRET, { expiresIn: '15m' });
     }
 
     private generateRefreshToken(account, ipAddress) {

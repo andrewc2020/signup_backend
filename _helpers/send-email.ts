@@ -1,10 +1,13 @@
 const nodemailer = require('nodemailer');
-import config from '../config.json';
 
 
 
-async function sendEmail({ to, subject, html, from = config.emailFrom }) {
-    const transporter = nodemailer.createTransport(config.smtpOptions);
+
+
+async function sendEmail({ to, subject, html, from = process.env.EMAIL_FROM }) {
+    const _smtpOptions   = {'host': process.env.SMTP_HOST, 'port' : parseInt(process.env.SMTP_PORT)}
+    const transporter = nodemailer.createTransport(_smtpOptions); 
+   
     await transporter.sendMail({ from, to, subject, html });
 }
 
