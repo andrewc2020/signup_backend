@@ -12,10 +12,10 @@ Added testing with mocha, chai and sinon
 Refactored repository from service to enable IOC
 Added IOC with inversify
 
-Replaced ethereal email smpt server with mailhog to extend email functionality
+Replaced ethereal email smtp server with mailhog to extend email functionality
 
 See the companion repo andrewc2020/signup which has front end and docker-compose yml to build services
-Add your own mongo cluster to persist accounts and your own .env with mongo connectionstring and mailhog smpt variables as follows:
+Add your own mongo cluster to persist accounts and your own .env with mongo connectionstring and mailhog smtp variables as follows:
 
 DB_CONN_STRING=[your mongoose connection string]
 SECRET=[your secret for JWT hashing]
