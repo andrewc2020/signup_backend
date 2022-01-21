@@ -5,7 +5,7 @@ import chai, {expect} from 'chai';
 chai.should()
 chai.use(sinonChai)
 
-function hello(name, cb){
+function hello(name : string, cb : (name: string) => string){
     cb("hello " + name);
     
 

@@ -7,13 +7,13 @@ import RefreshToken from '../accounts/refresh-token.model'
 
 async function run(): Promise<void> {
     // 4. Connect to MongoDB
-    await connect(process.env.DB_CONN_STRING);
+    await connect(process.env.DB_CONN_STRING? process.env.DB_CONN_STRING : "");
 
     console.log('connecting to database ...')
   
     
   }
-  function isValidId(id) {
+  function isValidId(id: string) {
     
      
   return true;

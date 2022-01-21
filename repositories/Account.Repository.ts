@@ -2,12 +2,13 @@ import { IAccountRepository } from "./IAccountRepository";
 import db from '../_helpers/db'
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
-import jwt from 'jsonwebtoken';
+import jwt,  { sign, verify }  from 'jsonwebtoken';
 
 import sendEmail from '../_helpers/send-email';
 import Role from '../_helpers/role';
 
 import { injectable } from 'inversify';
+import IAccount from "../accounts/IAccount";
 
 
 @injectable()
@@ -32,7 +33,7 @@ export class AccountRepository implements IAccountRepository {
 
         return
     }
-    async create(params) {
+    async create(params: IAccount) {
         // validate
         if (await db.Account.findOne({ email: params.email })) {
             throw 'Email "' + params.email + '" is already registered';
@@ -76,7 +77,7 @@ export class AccountRepository implements IAccountRepository {
 
     }
 
-    basicDetails(account) {
+    basicDetails(account: any) {
         const { id, title, firstName, lastName, email, role, created, updated, isVerified } = account;
         return { id, title, firstName, lastName, email, role, created, updated, isVerified };
     }
@@ -112,7 +113,7 @@ export class AccountRepository implements IAccountRepository {
 
     }
 
-    async refreshToken({ token, ipAddress }: { token: any; ipAddress: any; }) {
+    async refreshToken({ token, ipAddress}: { token: string; ipAddress: string; }) {
         const refreshToken = await this.getRefreshToken(token);
         const { account } = refreshToken;
     
@@ -135,7 +136,7 @@ export class AccountRepository implements IAccountRepository {
         };
     }
 
-    async revokeToken({ token, ipAddress }: { token: any; ipAddress: any; }) {
+    async revokeToken({ token, ipAddress }: { token: string; ipAddress: string; }) {
         const refreshToken = await this.getRefreshToken(token);
 
         // revoke token and save
@@ -144,7 +145,7 @@ export class AccountRepository implements IAccountRepository {
         await refreshToken.save();
         
     }
-    async register(params, origin) {
+    async register(params: { email: string, password: string }, origin: any) {
         // validate
         if (await db.Account.findOne({ email: params.email })) {
             // send already registered error in email to prevent account enumeration
@@ -169,8 +170,8 @@ export class AccountRepository implements IAccountRepository {
         await this.sendVerificationEmail(account, origin);
     }
     
-    private async sendVerificationEmail(account, origin) {
-        let message;
+    private async sendVerificationEmail(account: any, origin: any) {
+        let message: string;
         if (origin) {
             const verifyUrl = `${origin}/account/verify-email?token=${account.verificationToken}`;
             message = `<p>Please click the below link to verify your email address:</p>
@@ -189,17 +190,17 @@ export class AccountRepository implements IAccountRepository {
         });
     }
 
-    async verifyEmail({ token }) {
+    async verifyEmail({ token }: {token : string}) {
         const account = await db.Account.findOne({ verificationToken: token });
     
         if (!account) throw 'Verification failed';
     
         account.verified = new Date(Date.now());
-        account.verificationToken = undefined;
+        account.verificationToken = "";
         await account.save();
     }
 
-    async forgotPassword({ email }, origin) {
+    async forgotPassword({ email }: { email: any; }, origin: any) {
         const account = await db.Account.findOne({ email });
     
         // always return ok response to prevent email enumeration
@@ -216,7 +217,7 @@ export class AccountRepository implements IAccountRepository {
         await this.sendPasswordResetEmail(account, origin);
     }
 
-    async validateResetToken({ token }) {
+    async validateResetToken({ token }: {token: string}) {
         const account = await db.Account.findOne({
             'resetToken.token': token,
             'resetToken.expires': { $gt: Date.now() }
@@ -225,7 +226,7 @@ export class AccountRepository implements IAccountRepository {
         if (!account) throw 'Invalid token';
     }
 
-    async resetPassword({ token, password }) {
+    async resetPassword({ token, password  }: {token: string, password: string}) {
         const account = await db.Account.findOne({
             'resetToken.token': token,
             'resetToken.expires': { $gt: Date.now() }
@@ -236,13 +237,13 @@ export class AccountRepository implements IAccountRepository {
         // update password and remove reset token
         account.passwordHash = this.hash(password);
         account.passwordReset = new Date(Date.now());
-        account.resetToken = undefined;
+        account.resetToken =  undefined;
         await account.save();
     }
     
 
-    private async sendPasswordResetEmail(account, origin) {
-        let message;
+    private async sendPasswordResetEmail(account: any, origin: any) {
+        let message: string;
         if (origin) {
             const resetUrl = `${origin}/account/reset-password?token=${account.resetToken.token}`;
             message = `<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
@@ -261,8 +262,8 @@ export class AccountRepository implements IAccountRepository {
     }
     
     
-    private async sendAlreadyRegisteredEmail(email, origin) {
-        let message;
+    private async sendAlreadyRegisteredEmail(email : string, origin: any) {
+        let message: string;
         if (origin) {
             message = `<p>If you don't know your password please visit the <a href="${origin}/account/forgot-password">forgot password</a> page.</p>`;
         } else {
@@ -277,18 +278,18 @@ export class AccountRepository implements IAccountRepository {
                    ${message}`
         });
     }
-    private async getRefreshToken(token) {
+    private async getRefreshToken(token : string) {
         const refreshToken = await db.RefreshToken.findOne({ token }).populate('account');
         if (!refreshToken || !refreshToken.isActive) throw 'Invalid token';
         return refreshToken;
     }
 
-    private generateJwtToken(account) {
+    private generateJwtToken(account : any) {
         // create a jwt token containing the account id that expires in 15 minutes
-        return jwt.sign({ sub: account.id, id: account.id }, process.env.SECRET, { expiresIn: '15m' });
+        return jwt.sign({ sub: account.id, id: account.id }, process.env.SECRET as jwt.Secret , { expiresIn: '15m' });
     }
 
-    private generateRefreshToken(account, ipAddress) {
+    private generateRefreshToken(account: any, ipAddress: string) {
         // create a refresh token that expires in 7 days
         return new db.RefreshToken({
             account: account.id,

@@ -1,6 +1,6 @@
 module.exports = errorHandler;
 
-export default function errorHandler(err, req, res, next) {
+export default function errorHandler(err: any, req: any, res : any, next: any) {
     switch (true) {
         case typeof err === 'string':
             // custom application error

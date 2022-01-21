@@ -14,7 +14,7 @@ interface Account extends Document {
     role: string,
     verificationToken: string,
     verified: Date,
-    resetToken: {
+    resetToken?: {
         token: String,
         expires: Date
     },
