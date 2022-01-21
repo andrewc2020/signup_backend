@@ -38,7 +38,7 @@ export class AccountService implements IAccountService{
         }
         
     }
-    getAll() {
+    getAll() : any {
 
         try{
 
@@ -104,11 +104,11 @@ export class AccountService implements IAccountService{
 
     }
 
-    async refreshToken({ token, ipAddress }) {
+    async refreshToken({ token, ipAddress }: {token: string, ipAddress: string}) {
         return this.repository.refreshToken({token, ipAddress})
     }
 
-    async revokeToken({ token, ipAddress }: { token: any; ipAddress: any; }) {
+    async revokeToken({ token, ipAddress }: { token: string; ipAddress: string; }) {
        return this.repository.revokeToken({token, ipAddress})
     }
 

@@ -19,7 +19,7 @@ export class FakeAccountRepository implements IAccountRepository {
     getById(id: string) {
         throw new Error("Method not implemented.");
     }
-    create(params: string[]) {
+    create(params: IAccount) {
         throw new Error("Method not implemented.");
     }
     update(id: string, params: any) {
@@ -40,7 +40,7 @@ export class FakeAccountRepository implements IAccountRepository {
     revokeToken({ token, ipAddress }: { token: any; ipAddress: any; }) {
         throw new Error("Method not implemented.");
     }
-    register(params: any, origin: any) {
+    register(params:  { email: string; password: string; }, origin: any) {
         throw new Error("Method not implemented.");
     }
     verifyEmail({ token }: { token: any; }) {

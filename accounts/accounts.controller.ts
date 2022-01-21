@@ -33,7 +33,9 @@ module.exports = router;
 let accountRepo = container.get<IAccountRepository>(SERVICE_IDENTIFIER.IAccountRepository);
 let service= new AccountService(accountRepo);
 
-function authenticateSchema(req, res, next) {
+
+
+function authenticateSchema(req : express.Request, res: express.Response, next: express.NextFunction) {
     const schema = Joi.object({
         email: Joi.string().required(),
         password: Joi.string().required()
@@ -41,7 +43,7 @@ function authenticateSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 
-function authenticate(req, res, next) {
+function authenticate(req : express.Request, res: express.Response, next: express.NextFunction) {
     const { email, password } = req.body;
     const ipAddress = req.ip;
     
@@ -53,7 +55,7 @@ function authenticate(req, res, next) {
         .catch(next);
 }
 
-function refreshToken(req, res, next) {
+function refreshToken(req : express.Request, res: express.Response, next: express.NextFunction) {
     const token = req.cookies.refreshToken;
     const ipAddress = req.ip;
     service.refreshToken({ token, ipAddress })
@@ -64,14 +66,14 @@ function refreshToken(req, res, next) {
         .catch(next);
 }
 
-function revokeTokenSchema(req, res, next) {
+function revokeTokenSchema(req : express.Request, res: express.Response, next: express.NextFunction) {
     const schema = Joi.object({
         token: Joi.string().empty('')
     });
     validateRequest(req, next, schema);
 }
 
-function revokeToken(req, res, next) {
+function revokeToken(req : any, res: express.Response, next: express.NextFunction) {
     // accept token from request body or cookie
     const token = req.body.token || req.cookies.refreshToken;
     const ipAddress = req.ip;
@@ -88,7 +90,7 @@ function revokeToken(req, res, next) {
         .catch(next);
 }
 
-function registerSchema(req, res, next) {
+function registerSchema(req : express.Request, res: express.Response, next: express.NextFunction) {
     const schema = Joi.object({
         title: Joi.string().required(),
         firstName: Joi.string().required(),
@@ -101,52 +103,52 @@ function registerSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 
-function register(req, res, next) {
+function register(req : express.Request, res: express.Response, next: express.NextFunction) {
     service.register(req.body, req.get('origin'))
         .then(() => res.json({ message: 'Registration successful, please check your email for verification instructions' }))
         .catch(next);
 }
 
-function verifyEmailSchema(req, res, next) {
+function verifyEmailSchema(req : express.Request, res: express.Response, next: express.NextFunction) {
     const schema = Joi.object({
         token: Joi.string().required()
     });
     validateRequest(req, next, schema);
 }
 
-function verifyEmail(req, res, next) {
+function verifyEmail(req : express.Request, res: express.Response, next: express.NextFunction) {
     service.verifyEmail(req.body)
         .then(() => res.json({ message: 'Verification successful, you can now login' }))
         .catch(next);
 }
 
-function forgotPasswordSchema(req, res, next) {
+function forgotPasswordSchema(req : express.Request, res: express.Response, next: express.NextFunction) {
     const schema = Joi.object({
         email: Joi.string().email().required()
     });
     validateRequest(req, next, schema);
 }
 
-function forgotPassword(req, res, next) {
+function forgotPassword(req : express.Request, res: express.Response, next: express.NextFunction) {
     service.forgotPassword(req.body, req.get('origin'))
         .then(() => res.json({ message: 'Please check your email for password reset instructions' }))
         .catch(next);
 }
 
-function validateResetTokenSchema(req, res, next) {
+function validateResetTokenSchema(req : express.Request, res: express.Response, next: express.NextFunction) {
     const schema = Joi.object({
         token: Joi.string().required()
     });
     validateRequest(req, next, schema);
 }
 
-function validateResetToken(req, res, next) {
+function validateResetToken(req : express.Request, res: express.Response, next: express.NextFunction) {
     service.validateResetToken(req.body)
         .then(() => res.json({ message: 'Token is valid' }))
         .catch(next);
 }
 
-function resetPasswordSchema(req, res, next) {
+function resetPasswordSchema(req : express.Request, res: express.Response, next: express.NextFunction) {
     const schema = Joi.object({
         token: Joi.string().required(),
         password: Joi.string().min(6).required(),
@@ -155,30 +157,30 @@ function resetPasswordSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 
-function resetPassword(req, res, next) {
+function resetPassword(req : express.Request, res: express.Response, next: express.NextFunction) {
     service.resetPassword(req.body)
         .then(() => res.json({ message: 'Password reset successful, you can now login' }))
         .catch(next);
 }
 
-function getAll(req, res, next) {
+function getAll(req : express.Request, res: express.Response, next: express.NextFunction) {
     service.getAll()
-        .then(accounts => res.json(accounts))
+        .then((accounts: any) => res.json(accounts))
         .catch(next);
 }
 
-function getById(req, res, next) {
+function getById(req :any, res: express.Response, next: express.NextFunction) {
     // users can get their own account and admins can get any account
     if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
     service.getById(req.params.id, req.params)
-        .then(account => account ? res.json(account) : res.sendStatus(404))
+        .then((account: any) => account ? res.json(account) : res.sendStatus(404))
         .catch(next);
 }
 
-function createSchema(req, res, next) {
+function createSchema(req : express.Request, res: express.Response, next: express.NextFunction) {
     const schema = Joi.object({
         title: Joi.string().required(),
         firstName: Joi.string().required(),
@@ -191,13 +193,13 @@ function createSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 
-function create(req, res, next) {
+function create(req : express.Request, res: express.Response, next: express.NextFunction) {
     service.create(req.body)
-        .then(account => res.json(account))
+        .then((account: any) => res.json(account))
         .catch(next);
 }
 
-function updateSchema(req, res, next) {
+function updateSchema(req : any, res: express.Response, next: express.NextFunction) {
     const schemaRules = {
         title: Joi.string().empty(''),
         firstName: Joi.string().empty(''),
@@ -217,18 +219,18 @@ function updateSchema(req, res, next) {
     validateRequest(req, next, schema);
 }
 
-function update(req, res, next) {
+function update(req :any, res: express.Response, next: express.NextFunction) {
     // users can update their own account and admins can update any account
     if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
     service.update(req.params.id, req.body)
-        .then(account => res.json(account))
+        .then((account: any) => res.json(account))
         .catch(next);
 }
 
-function _delete(req, res, next) {
+function _delete(req :any, res: express.Response, next: express.NextFunction) {
     // users can delete their own account and admins can delete any account
     if (req.params.id !== req.user.id && req.user.role !== Role.Admin) {
         return res.status(401).json({ message: 'Unauthorized' });
@@ -241,7 +243,7 @@ function _delete(req, res, next) {
 
 // helper functions
 
-function setTokenCookie(res, token) {
+function setTokenCookie(res: express.Response, token: string) {
     // create cookie with refresh token that expires in 7 days
     const cookieOptions = {
         httpOnly: true,

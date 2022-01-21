@@ -1,4 +1,5 @@
 export default interface IAccount{
+    [x: string]: any;
     id: any;
     email: { type: String, unique: true, required: true },
     passwordHash: { type: String, required: true },
