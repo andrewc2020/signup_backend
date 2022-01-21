@@ -1,4 +1,4 @@
-module.exports.validMeme = function() {
+const validMeme = function() {
     return {
       name: 'Some name here',
       dank: false,
@@ -6,7 +6,7 @@ module.exports.validMeme = function() {
     };
   };
    
-  module.exports.repostMeme = function() {
+  const repostMeme = function() {
     return {
       name: 'Some name here',
       dank: false,
@@ -15,7 +15,7 @@ module.exports.validMeme = function() {
   }; 
 
 
-  module.exports.Accounts = () => {
+  const Accounts = () => {
     return [{
       email: "maryGaylord@somewhere.com",
       title: "Ms",
@@ -33,4 +33,12 @@ module.exports.validMeme = function() {
 
 
     ]
+  }
+
+  export {
+    validMeme,
+    repostMeme,
+    Accounts,
+    
+
   }

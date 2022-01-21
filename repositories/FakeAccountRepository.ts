@@ -11,7 +11,7 @@ export class FakeAccountRepository implements IAccountRepository {
 
     }
     start() {
-        throw new Error('Method not implemented.');
+        //throw new Error('Method not implemented.');
     }
     getAll() {
         throw new Error("Method not implemented.");
@@ -20,7 +20,7 @@ export class FakeAccountRepository implements IAccountRepository {
         throw new Error("Method not implemented.");
     }
     create(params: IAccount) {
-        throw new Error("Method not implemented.");
+        //throw new Error("Method not implemented.");
     }
     update(id: string, params: any) {
         throw new Error("Method not implemented.");

@@ -4,10 +4,11 @@ import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
 import Account from '../accounts/account.model'
 import {IAccountRepository} from "../repositories/IAccountRepository";
-import container from "../_helpers/installer";
+import container from "../inversify.config";
 import SERVICE_IDENTIFIER from "../constants/identifiers";
 import { AccountService } from '../accounts/account.service';
 import Role from '../_helpers/role'
+import { getEffectiveConstraintOfTypeParameter } from "typescript";
 
 
 
@@ -60,6 +61,9 @@ describe('example tests',() =>{
     it("should add a new user to the db", async function() {
       const stubValue  =  new Account({ email:"marygaylord@somewhere.com", title: "Ms", firstName: "Mary", lastName: "Gaylord", acceptTerms: true, role: Role.Admin, passwordHash: "qiprqr9339"});
       let accountRepo = container.get<IAccountRepository>(SERVICE_IDENTIFIER.IAccountRepository);
+      
+      
+     
       let service = new AccountService(accountRepo);
       let methodStub: sinon.SinonStubbedMember<typeof service.register>;
       methodStub = sinon.stub(service, 'register');
